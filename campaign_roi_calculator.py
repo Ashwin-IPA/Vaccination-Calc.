@@ -3,10 +3,10 @@ import pandas as pd
 
 # Predefined vaccine fees
 vaccine_fees = {
-    "Flu": 20,
-    "COVID-19": 30,
-    "Shingles": 40,
-    "Pneumococcal": 35,
+    "Flu ($20)": 20,
+    "COVID-19 ($30)": 30,
+    "Shingles ($40)": 40,
+    "Pneumococcal ($35)": 35,
     "None": 0
 }
 
@@ -85,4 +85,3 @@ if st.sidebar.button("🚀 Calculate ROI"):
         ]
     })
     st.table(df)
-
