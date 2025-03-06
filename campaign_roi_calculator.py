@@ -1,6 +1,15 @@
 import streamlit as st
 import pandas as pd
 
+# Predefined vaccine fees
+vaccine_fees = {
+    "Flu": 20,
+    "COVID-19": 30,
+    "Shingles": 40,
+    "Pneumococcal": 35,
+    "None": 0
+}
+
 # Function to calculate campaign ROI
 def calculate_roi(campaign_cost, expected_patients, avg_spend_per_patient, retention_rate):
     expected_revenue = expected_patients * avg_spend_per_patient
@@ -12,10 +21,10 @@ def calculate_roi(campaign_cost, expected_patients, avg_spend_per_patient, reten
 
 # Function to calculate co-administration impact
 def calculate_coadmin_break_even(campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee):
-    break_even_primary_only = campaign_cost / primary_vax_fee
+    break_even_primary_only = campaign_cost / primary_vax_fee if primary_vax_fee > 0 else 0
     break_even_secondary_only = campaign_cost / secondary_vax_fee if secondary_vax_fee > 0 else 0
-    break_even_combined = campaign_cost / (primary_vax_fee + secondary_vax_fee)
-    break_even_with_avg_spend = campaign_cost / (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient)
+    break_even_combined = campaign_cost / (primary_vax_fee + secondary_vax_fee) if (primary_vax_fee + secondary_vax_fee) > 0 else 0
+    break_even_with_avg_spend = campaign_cost / (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient) if (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient) > 0 else 0
     return break_even_primary_only, break_even_secondary_only, break_even_combined, break_even_with_avg_spend
 
 # Streamlit App
@@ -29,13 +38,13 @@ expected_patients = st.sidebar.number_input("Expected Patients", min_value=1, va
 avg_spend_per_patient = st.sidebar.number_input("Average Spend per Patient ($)", min_value=1, value=40)
 retention_rate = st.sidebar.slider("Retention Rate (%)", min_value=0, max_value=100, value=30)
 
-# Dropdowns for primary and secondary vaccinations
+# Dropdowns for primary and secondary vaccinations with automatic fee selection
 st.sidebar.header("💉 Co-Administration Vaccinations")
-primary_vax_type = st.sidebar.selectbox("Select Primary Vaccine", ["Flu", "COVID-19", "Shingles", "Pneumococcal"])
-primary_vax_fee = st.sidebar.number_input("Primary Vaccine Fee per Patient ($)", min_value=0, value=20)
+primary_vax_type = st.sidebar.selectbox("Select Primary Vaccine", list(vaccine_fees.keys()))
+primary_vax_fee = vaccine_fees[primary_vax_type]
 
-secondary_vax_type = st.sidebar.selectbox("Select Secondary Vaccine", ["None", "Flu", "COVID-19", "Shingles", "Pneumococcal"])
-secondary_vax_fee = st.sidebar.number_input("Secondary Vaccine Fee per Patient ($)", min_value=0, value=15)
+secondary_vax_type = st.sidebar.selectbox("Select Secondary Vaccine", list(vaccine_fees.keys()))
+secondary_vax_fee = vaccine_fees[secondary_vax_type]
 
 if st.sidebar.button("🚀 Calculate ROI"):
     expected_revenue, break_even_patients, repeat_customers, roi = calculate_roi(
