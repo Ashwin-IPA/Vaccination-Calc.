@@ -1,7 +1,15 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
-import plotly.io as pio
+
+# Try importing Plotly, if unavailable, install it
+try:
+    import plotly.express as px
+    import plotly.io as pio
+except ModuleNotFoundError:
+    import os
+    os.system('pip install plotly')
+    import plotly.express as px
+    import plotly.io as pio
 
 # Ensure plotly is using the correct renderer for Streamlit
 pio.renderers.default = "browser"
