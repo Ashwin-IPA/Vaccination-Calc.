@@ -3,10 +3,10 @@ import pandas as pd
 
 # Predefined vaccine fees
 vaccine_fees = {
-    "Flu ($20)": 20,
-    "COVID-19 ($30)": 30,
-    "Shingles ($40)": 40,
-    "Pneumococcal ($35)": 35,
+    "Flu ($22)": 22,
+    "COVID-19 (Free)": 0,
+    "Shingles ($251)": 251,
+    "Pneumococcal ($180)": 180,
     "None": 0
 }
 
@@ -17,7 +17,7 @@ def calculate_roi(campaign_cost, expected_patients, avg_spend_per_patient, reten
     repeat_customers = expected_patients * (retention_rate / 100)
     roi = ((expected_revenue - campaign_cost) / campaign_cost) * 100
     
-    return expected_revenue, break_even_patients, repeat_customers, roi
+    return round(expected_revenue, 2), round(break_even_patients, 2), round(repeat_customers, 2), round(roi, 2)
 
 # Function to calculate co-administration impact
 def calculate_coadmin_break_even(campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee):
@@ -25,7 +25,7 @@ def calculate_coadmin_break_even(campaign_cost, avg_spend_per_patient, primary_v
     break_even_secondary_only = campaign_cost / secondary_vax_fee if secondary_vax_fee > 0 else 0
     break_even_combined = campaign_cost / (primary_vax_fee + secondary_vax_fee) if (primary_vax_fee + secondary_vax_fee) > 0 else 0
     break_even_with_avg_spend = campaign_cost / (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient) if (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient) > 0 else 0
-    return break_even_primary_only, break_even_secondary_only, break_even_combined, break_even_with_avg_spend
+    return round(break_even_primary_only, 2), round(break_even_secondary_only, 2), round(break_even_combined, 2), round(break_even_with_avg_spend, 2)
 
 # Streamlit App
 st.set_page_config(page_title="Pharmacy Campaign ROI Calculator", layout="wide")
@@ -60,10 +60,10 @@ if st.sidebar.button("🚀 Calculate ROI"):
     col1, col2 = st.columns(2)
     with col1:
         st.metric(label="💰 Expected Revenue ($)", value=f"${expected_revenue:,.2f}")
-        st.metric(label="🔄 Retained Customers", value=f"{repeat_customers:.0f}")
+        st.metric(label="🔄 Retained Customers", value=f"{repeat_customers:.2f}")
     with col2:
         st.metric(label="📈 ROI (%)", value=f"{roi:.2f}%")
-        st.metric(label="🔢 Break-Even Patients", value=f"{break_even_patients:.0f}")
+        st.metric(label="🔢 Break-Even Patients", value=f"{break_even_patients:.2f}")
     
     # Display results as a DataFrame
     df = pd.DataFrame({
@@ -85,3 +85,4 @@ if st.sidebar.button("🚀 Calculate ROI"):
         ]
     })
     st.table(df)
+
