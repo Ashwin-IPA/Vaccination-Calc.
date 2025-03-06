@@ -1,18 +1,6 @@
 import streamlit as st
 import pandas as pd
-
-# Try importing Plotly, if unavailable, install it
-try:
-    import plotly.express as px
-    import plotly.io as pio
-except ModuleNotFoundError:
-    import os
-    os.system('pip install plotly')
-    import plotly.express as px
-    import plotly.io as pio
-
-# Ensure plotly is using the correct renderer for Streamlit
-pio.renderers.default = "browser"
+import plotly.express as px
 
 # Function to calculate campaign ROI
 def calculate_roi(campaign_type, campaign_cost, expected_patients, avg_spend_per_patient, retention_rate, sms_boost, digital_boost):
@@ -76,10 +64,13 @@ if st.sidebar.button("🚀 Calculate ROI"):
         st.metric(label="🔢 Break-Even Patients", value=f"{result['Break-Even Patients Needed']:.0f}")
     
     # Visualizations
-    fig = px.bar(df.melt(id_vars=["Campaign Type"], value_vars=["Expected Revenue ($)", "Total Revenue ($)"]), 
-                 x="Campaign Type", y="value", color="variable", 
-                 title="📊 Revenue Breakdown", text_auto=True)
-    st.plotly_chart(fig, use_container_width=True)
+    try:
+        fig = px.bar(df.melt(id_vars=["Campaign Type"], value_vars=["Expected Revenue ($)", "Total Revenue ($)"]), 
+                     x="Campaign Type", y="value", color="variable", 
+                     title="📊 Revenue Breakdown", text_auto=True)
+        st.plotly_chart(fig, use_container_width=True)
+    except Exception as e:
+        st.warning(f"Visualization Error: {str(e)}")
     
     st.dataframe(df.style.format({
         "Campaign Cost ($)": "${:,.2f}",
