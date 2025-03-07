@@ -13,19 +13,16 @@ vaccine_fees = {
 # Function to calculate campaign ROI
 def calculate_roi(campaign_cost, expected_patients, avg_spend_per_patient, retention_rate):
     expected_revenue = round(expected_patients * avg_spend_per_patient, 2)
-    break_even_patients = round(campaign_cost / avg_spend_per_patient, 2)
     repeat_customers = round(expected_patients * (retention_rate / 100), 2)
     roi = round(((expected_revenue - campaign_cost) / campaign_cost) * 100, 2)
     
-    return expected_revenue, break_even_patients, repeat_customers, roi
+    return expected_revenue, repeat_customers, roi
 
-# Function to calculate co-administration impact
-def calculate_coadmin_break_even(campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee):
-    break_even_primary_only = round(campaign_cost / primary_vax_fee, 2) if primary_vax_fee > 0 else 0
-    break_even_secondary_only = round(campaign_cost / secondary_vax_fee, 2) if secondary_vax_fee > 0 else 0
-    break_even_combined = round(campaign_cost / (primary_vax_fee + secondary_vax_fee), 2) if (primary_vax_fee + secondary_vax_fee) > 0 else 0
-    break_even_with_avg_spend = round(campaign_cost / (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient), 2) if (primary_vax_fee + secondary_vax_fee + avg_spend_per_patient) > 0 else 0
-    return break_even_primary_only, break_even_secondary_only, break_even_combined, break_even_with_avg_spend
+# Function to calculate break-even patients
+def calculate_break_even(campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee):
+    total_revenue_per_patient = primary_vax_fee + secondary_vax_fee + avg_spend_per_patient
+    break_even_patients = round(campaign_cost / total_revenue_per_patient, 2) if total_revenue_per_patient > 0 else 0
+    return break_even_patients
 
 # Streamlit App
 st.set_page_config(page_title="Pharmacy Campaign ROI Calculator", layout="wide")
@@ -47,11 +44,11 @@ secondary_vax_type = st.sidebar.selectbox("Select Secondary Vaccine", list(vacci
 secondary_vax_fee = vaccine_fees[secondary_vax_type]
 
 if st.sidebar.button("🚀 Calculate ROI"):
-    expected_revenue, break_even_patients, repeat_customers, roi = calculate_roi(
+    expected_revenue, repeat_customers, roi = calculate_roi(
         campaign_cost, expected_patients, avg_spend_per_patient, retention_rate
     )
     
-    break_even_primary_only, break_even_secondary_only, break_even_combined, break_even_with_avg_spend = calculate_coadmin_break_even(
+    break_even_patients = calculate_break_even(
         campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee
     )
     
@@ -68,19 +65,11 @@ if st.sidebar.button("🚀 Calculate ROI"):
     # Display results as a DataFrame
     df = pd.DataFrame({
         "Metric": [
-            "Expected Revenue ($)", "Break-Even Patients Needed",
-            f"Break-Even Patients with {primary_vax_type} Only", 
-            f"Break-Even Patients with {secondary_vax_type} Only" if secondary_vax_type != "None" else "Break-Even Patients with Secondary Vaccine Only",
-            "Break-Even Patients with Both Vaccines",
-            "Break-Even Patients with Both Vaccines & Avg Spend",
+            "Expected Revenue ($)", "Break-Even Patients Needed (Vaccines + Avg Spend)",
             "Retained Customers", "ROI (%)"
         ],
         "Value": [
             f"${expected_revenue:,.2f}", f"{break_even_patients:,.2f}",
-            f"{break_even_primary_only:,.2f}",
-            f"{break_even_secondary_only:,.2f}" if secondary_vax_type != "None" else "N/A",
-            f"{break_even_combined:,.2f}",
-            f"{break_even_with_avg_spend:,.2f}",
             f"{repeat_customers:,.2f}", f"{roi:,.2f}%"
         ]
     })
