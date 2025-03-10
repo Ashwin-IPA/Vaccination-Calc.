@@ -62,23 +62,14 @@ st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
 # Email input and send button
 recipient_email = st.text_input("📧 Enter recipient email:")
-if recipient_email and st.button("📩 Send Email"):
-    subject = "Vaccination Earnings Report"
-    body = f"""
-Vaccination Earnings Report:
-
-Main Vaccine: {main_vaccine}
-Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
-Target Patients: {target_patients}
-Program Cost: ${program_cost:,.2f}
-Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
-
-Estimated Potential Earnings: ${total_earnings:,.2f}
-"""
-    mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-    st.markdown(f"[📩 Send Email]({mailto_link})")
-st.markdown(f"[📬 Click here if email doesn't populate automatically]({mailto_link})")
-    st.success("✅ Email Populated Successfully!")
+if recipient_email:
+    mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote('Vaccination Earnings Report')}&body={urllib.parse.quote(f'Main Vaccine: {main_vaccine}\nSecondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}\nTarget Patients: {target_patients}\nProgram Cost: ${program_cost:,.2f}\nBasket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}\nEstimated Potential Earnings: ${total_earnings:,.2f}')}""
+    
+    if st.button("📩 Send Email"):
+        st.markdown(f"[📩 Click to Send Email]({mailto_link})")
+        st.success("✅ Email Populated Successfully!")
+    
+    st.markdown(f"[📬 Click here if email doesn't populate automatically]({mailto_link})")
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
