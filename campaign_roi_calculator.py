@@ -51,7 +51,7 @@ target_patients = st.number_input("🎯 Target Number of Patients", min_value=0,
 
 # Basket size (optional)
 include_basket_size = st.checkbox("🛒 Include basket size")
-basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
+basket_size = st.number_input("Avg. Target Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
 
 # Calculate earnings
 main_vaccine_price = custom_prices.get(main_vaccine, 0)
@@ -73,7 +73,7 @@ Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
 Target Patients: {target_patients}
 Total Stock Cost: ${stock_cost:,.2f}
-Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
+Avg. Target Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
     mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote('Vaccination Earnings Report')}&body={urllib.parse.quote(email_body)}"
@@ -86,4 +86,5 @@ Estimated Potential Earnings: ${total_earnings:,.2f}
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
+
 
