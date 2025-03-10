@@ -30,7 +30,7 @@ vaccine_prices = {
 }
 
 # Sidebar for vaccine pricing customization
-st.sidebar.header("🎯 Customise Your Vaccine Pricing")
+st.sidebar.header("🎯 Customize Vaccine Pricing")
 custom_prices = {}
 for vaccine, price in vaccine_prices.items():
     custom_prices[vaccine] = st.sidebar.number_input(f"{vaccine} Price ($)", value=price, min_value=0.0)
@@ -43,8 +43,8 @@ st.header("2️⃣ Optional Co-administration Vaccine")
 coadmin_vaccine = st.selectbox("Select a secondary vaccine (optional):", ["None"] + list(vaccine_prices.keys()))
 
 # Program cost toggle
-include_program_cost = st.checkbox("📢 Include program cost")
-program_cost = st.number_input("Program Cost ($)", min_value=0.0, value=100.0) if include_program_cost else 0.0
+include_stock_cost = st.checkbox("📢 Include Total Stock Cost")
+stock_cost = st.number_input("Total Stock Cost ($)", min_value=0.0, value=100.0) if include_stock_cost else 0.0
 
 # Set targets
 target_patients = st.number_input("🎯 Target Number of Patients", min_value=0, value=100)
@@ -56,9 +56,14 @@ basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, valu
 # Calculate earnings
 main_vaccine_price = custom_prices.get(main_vaccine, 0)
 coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
-total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients) + (basket_size * target_patients) - program_cost
+total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients) + (basket_size * target_patients) - stock_cost
 
 st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+
+# Break-even calculation
+if include_stock_cost and total_earnings > 0:
+    break_even_patients = stock_cost / ((main_vaccine_price + coadmin_vaccine_price) + basket_size) if (main_vaccine_price + coadmin_vaccine_price + basket_size) > 0 else 0
+    st.subheader(f"📊 Break-even Number of Patients: **{break_even_patients:.0f}**")
 
 # Email input and send button
 recipient_email = st.text_input("📧 Enter recipient email:")
@@ -67,7 +72,7 @@ if recipient_email:
 Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
 Target Patients: {target_patients}
-Program Cost: ${program_cost:,.2f}
+Total Stock Cost: ${stock_cost:,.2f}
 Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
@@ -81,3 +86,4 @@ Estimated Potential Earnings: ${total_earnings:,.2f}
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
+
