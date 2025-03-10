@@ -1,76 +1,66 @@
 import streamlit as st
 import pandas as pd
+import urllib.parse
 
-# Predefined vaccine fees
-vaccine_fees = {
-    "Flu ($22)": 22,
-    "COVID-19 (Free)": 0,
-    "Shingles ($251)": 251,
-    "Pneumococcal ($180)": 180,
-    "None": 0
+# Title
+st.title("Vaccination Potential Earnings Calculator")
+
+# Default vaccine pricing
+vaccine_prices = {
+    "Influenza": 19.32,
+    "COVID-19": 27.35,
+    "COVID-19 (site visit)": 122.4,
+    "Pneumococcal": 19.32,
+    "Respiratory Syncytial Virus (RSV)": 19.32,
+    "Measles, mumps, rubella": 19.32,
+    "Diphtheria, tetanus, pertussis": 19.32,
+    "Shingles": 19.32,
+    "Hepatitis A": 19.32,
+    "Hepatitis B": 19.32,
+    "Typhoid": 19.32,
+    "Human papillomavirus": 19.32,
+    "Japanese encephalitis": 19.32,
+    "Meningococcal ACWY": 19.32,
+    "Meningococcal B": 19.32,
+    "Meningococcal C": 19.32,
+    "Mpox (Monkeypox)": 19.32,
+    "Poliomyelitis": 19.32,
+    "Varicella": 19.32,
+    "Rabies": 19.32
 }
 
-# Function to calculate campaign ROI
-def calculate_roi(campaign_cost, expected_patients, avg_spend_per_patient, retention_rate):
-    expected_revenue = round(expected_patients * avg_spend_per_patient, 2)
-    repeat_customers = round(expected_patients * (retention_rate / 100), 2)
-    roi = round(((expected_revenue - campaign_cost) / campaign_cost) * 100, 2)
-    
-    return expected_revenue, repeat_customers, roi
+# User input: Editable vaccine pricing
+st.sidebar.header("Customize Vaccine Pricing")
+custom_prices = {}
+for vaccine, price in vaccine_prices.items():
+    custom_prices[vaccine] = st.sidebar.number_input(f"{vaccine} Price ($)", value=price, min_value=0.0)
 
-# Function to calculate break-even patients
-def calculate_break_even(campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee):
-    total_revenue_per_patient = primary_vax_fee + secondary_vax_fee + avg_spend_per_patient
-    break_even_patients = round(campaign_cost / total_revenue_per_patient, 2) if total_revenue_per_patient > 0 else 0
-    return break_even_patients
+# Campaign cost
+include_campaign_cost = st.checkbox("Include campaign cost")
+campaign_cost = st.number_input("Campaign Cost ($)", min_value=0.0, value=0.0 if not include_campaign_cost else 100.0)
 
-# Streamlit App
-st.set_page_config(page_title="Pharmacy Campaign ROI Calculator", layout="wide")
-st.title("🚀 Pharmacy Campaign ROI Calculator")
+# Set targets
+target_vaccinations = st.number_input("Target Number of Vaccinations", min_value=0, value=100)
 
-# User Inputs
-st.sidebar.header("📊 Campaign Inputs")
-campaign_cost = st.sidebar.number_input("Campaign Cost ($)", min_value=100, value=500)
-expected_patients = st.sidebar.number_input("Expected Patients", min_value=1, value=200)
-avg_spend_per_patient = st.sidebar.number_input("Average Spend per Patient ($)", min_value=1, value=40)
-retention_rate = st.sidebar.slider("Retention Rate (%)", min_value=0, max_value=100, value=30)
+# Basket size (optional)
+include_basket_size = st.checkbox("Include basket size")
+basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
 
-# Dropdowns for primary and secondary vaccinations with automatic fee selection
-st.sidebar.header("💉 Co-Administration Vaccinations")
-primary_vax_type = st.sidebar.selectbox("Select Primary Vaccine", list(vaccine_fees.keys()))
-primary_vax_fee = vaccine_fees[primary_vax_type]
+# Calculation of potential earnings
+def calculate_potential_earnings():
+    total_earnings = sum(custom_prices.values()) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
+    return total_earnings
 
-secondary_vax_type = st.sidebar.selectbox("Select Secondary Vaccine", list(vaccine_fees.keys()))
-secondary_vax_fee = vaccine_fees[secondary_vax_type]
+total_earnings = calculate_potential_earnings()
+st.subheader(f"Estimated Potential Earnings: ${total_earnings:,.2f}")
 
-if st.sidebar.button("🚀 Calculate ROI"):
-    expected_revenue, repeat_customers, roi = calculate_roi(
-        campaign_cost, expected_patients, avg_spend_per_patient, retention_rate
-    )
-    
-    break_even_patients = calculate_break_even(
-        campaign_cost, avg_spend_per_patient, primary_vax_fee, secondary_vax_fee
-    )
-    
-    st.success("✅ Calculation Complete!")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.metric(label="💰 Expected Revenue ($)", value=f"${expected_revenue:,.2f}")
-        st.metric(label="🔄 Retained Customers", value=f"{repeat_customers:,.2f}")
-    with col2:
-        st.metric(label="📈 ROI (%)", value=f"{roi:,.2f}%")
-        st.metric(label="🔢 Break-Even Patients", value=f"{break_even_patients:,.2f}")
-    
-    # Display results as a DataFrame
-    df = pd.DataFrame({
-        "Metric": [
-            "Expected Revenue ($)", "Break-Even Patients Needed (Vaccines + Avg Spend)",
-            "Retained Customers", "ROI (%)"
-        ],
-        "Value": [
-            f"${expected_revenue:,.2f}", f"{break_even_patients:,.2f}",
-            f"{repeat_customers:,.2f}", f"{roi:,.2f}%"
-        ]
-    })
-    st.table(df)
+# Mailto link generation
+recipient_email = st.text_input("Enter recipient email:")
+if st.button("Send Report via Email"):
+    subject = "Vaccination Earnings Report"
+    body = f"Estimated potential earnings: ${total_earnings:,.2f}"
+    mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+    st.markdown(f"[Click here to send email]({mailto_link})")
+
+# Financial disclaimer
+st.markdown("""**Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
