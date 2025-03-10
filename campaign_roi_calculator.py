@@ -29,7 +29,7 @@ vaccine_prices = {
     "Rabies": 19.32
 }
 
-# Sidebar for vaccine pricing customisation
+# Sidebar for vaccine pricing customization
 st.sidebar.header("🎯 Customize Vaccine Pricing")
 custom_prices = {}
 for vaccine, price in vaccine_prices.items():
@@ -53,23 +53,18 @@ target_vaccinations = st.number_input("🎯 Target Number of Vaccinations", min_
 include_basket_size = st.checkbox("🛒 Include basket size")
 basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
 
-# Generate report button
+# Calculate earnings
 main_vaccine_price = custom_prices.get(main_vaccine, 0)
 coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
 total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
 
-    main_vaccine_price = custom_prices.get(main_vaccine, 0)
-    coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
-    total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
-    st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
-
-# Email input and send button (only show after generating report)
 st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+
+# Email input and send button
 recipient_email = st.text_input("📧 Enter recipient email:")
-    recipient_email = st.text_input("📧 Enter recipient email:")
-    if recipient_email and st.button("📩 Send Email"):
-        subject = "Vaccination Earnings Report"
-        body = f"""
+if recipient_email and st.button("📩 Send Email"):
+    subject = "Vaccination Earnings Report"
+    body = f"""
 Vaccination Earnings Report:
 
 Main Vaccine: {main_vaccine}
@@ -80,9 +75,9 @@ Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
-        mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-        st.markdown(f"[📨 Click here to send email]({mailto_link})")
-        st.success("✅ Email Sent Successfully!")
+    mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+    st.markdown(f"[📨 Click here to send email]({mailto_link})")
+    st.success("✅ Email Sent Successfully!")
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
