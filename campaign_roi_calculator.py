@@ -30,7 +30,7 @@ vaccine_prices = {
 }
 
 # Sidebar for vaccine pricing customization
-st.sidebar.header("🎯 Customise Vaccine Pricing")
+st.sidebar.header("🎯 Customise Your Vaccine Pricing")
 custom_prices = {}
 for vaccine, price in vaccine_prices.items():
     custom_prices[vaccine] = st.sidebar.number_input(f"{vaccine} Price ($)", value=price, min_value=0.0)
