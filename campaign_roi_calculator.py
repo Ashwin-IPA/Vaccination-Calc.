@@ -56,7 +56,7 @@ basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, valu
 # Calculate earnings
 main_vaccine_price = custom_prices.get(main_vaccine, 0)
 coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
-total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients + (basket_size * target_patients)) - program_cost
+total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients) + (basket_size * target_patients) - program_cost
 
 st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
