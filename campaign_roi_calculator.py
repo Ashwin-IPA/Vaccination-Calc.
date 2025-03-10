@@ -54,17 +54,20 @@ include_basket_size = st.checkbox("🛒 Include basket size")
 basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
 
 # Generate report button
-total_earnings = None
-if st.button("🚀 Generate Report"):
+main_vaccine_price = custom_prices.get(main_vaccine, 0)
+coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
+total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
+
     main_vaccine_price = custom_prices.get(main_vaccine, 0)
     coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
     total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
     st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
 # Email input and send button (only show after generating report)
-if total_earnings is not None:
+st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+recipient_email = st.text_input("📧 Enter recipient email:")
     recipient_email = st.text_input("📧 Enter recipient email:")
-    if st.button("📩 Send Email"):
+    if recipient_email and st.button("📩 Send Email"):
         subject = "Vaccination Earnings Report"
         body = f"""
 Vaccination Earnings Report:
