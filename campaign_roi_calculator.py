@@ -63,6 +63,7 @@ if st.button("🚀 Generate Report"):
     
     recipient_email = st.text_input("📧 Enter recipient email:")
     if st.button("📩 Send Email"):
+    st.success("✅ Email Sent Successfully!")
         subject = "Vaccination Earnings Report"
         body = f"""
 Vaccination Earnings Report:
