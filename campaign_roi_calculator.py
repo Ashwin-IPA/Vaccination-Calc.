@@ -56,11 +56,9 @@ basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, valu
 
 # Calculation of potential earnings
 def calculate_potential_earnings():
-    def calculate_potential_earnings():
     main_vaccine_price = custom_prices.get(main_vaccine, 0)
     coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
     total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
-    return total_earnings
     return total_earnings
 
 total_earnings = calculate_potential_earnings()
@@ -70,7 +68,8 @@ st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 recipient_email = st.text_input("📧 Enter recipient email:")
 if st.button("🚀 Generate Report"):
     subject = "Vaccination Earnings Report"
-    body = f"Vaccination Earnings Report:
+    body = f"""
+Vaccination Earnings Report:
 
 Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
@@ -78,7 +77,8 @@ Target Vaccinations: {target_vaccinations}
 Program Cost: ${campaign_cost:,.2f}
 Basket Size: ${basket_size:,.2f if include_basket_size else 'N/A'}
 
-Estimated Potential Earnings: ${total_earnings:,.2f}"
+Estimated Potential Earnings: ${total_earnings:,.2f}
+"""
     mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
     st.markdown(f"[📨 Click here to send email]({mailto_link})")
 
