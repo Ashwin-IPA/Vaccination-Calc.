@@ -78,11 +78,11 @@ Estimated Potential Earnings: ${total_earnings:,.2f}
 """
     mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote('Vaccination Earnings Report')}&body={urllib.parse.quote(email_body)}"
     
-    if st.button("📩 Send Email", key="send_email"):
+    if st.button("📩 Generate Email", key="send_email"):
         st.markdown(f"[📩 Click to Send Email]({mailto_link})", unsafe_allow_html=True)
         st.success("✅ Email Populated Successfully!")
     
-    st.markdown(f"[📬 Click here if email doesn't populate automatically]({mailto_link})", unsafe_allow_html=True)
+    
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
