@@ -65,13 +65,15 @@ def calculate_potential_earnings():
     return total_earnings
 
 total_earnings = None
-recipient_email = st.text_input("📧 Enter recipient email:")
-if total_earnings is not None and st.button("📩 Send Email"):
+recipient_email = None
+if total_earnings is not None:
+    recipient_email = st.text_input("📧 Enter recipient email:")
+    if st.button("📩 Send Email"):
     total_earnings = calculate_potential_earnings()
     st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
 # Mailto link generation
-recipient_email = st.text_input("📧 Enter recipient email:")
+
 if st.button("🚀 Generate Report"):
     subject = "Vaccination Earnings Report"
     body = f"""
@@ -90,3 +92,4 @@ Estimated Potential Earnings: ${total_earnings:,.2f}
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
+
