@@ -3,7 +3,7 @@ import pandas as pd
 import urllib.parse
 
 # Title with Emoji
-st.title("💉 Vaccination Potential Earnings Calculator ")
+st.title("💉 Vaccination Potential Earnings Calculator")
 
 # Default vaccine pricing
 vaccine_prices = {
@@ -56,7 +56,11 @@ basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, valu
 
 # Calculation of potential earnings
 def calculate_potential_earnings():
-    total_earnings = (custom_prices[main_vaccine] + (custom_prices[coadmin_vaccine] if coadmin_vaccine != "None" else 0)) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
+    def calculate_potential_earnings():
+    main_vaccine_price = custom_prices.get(main_vaccine, 0)
+    coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
+    total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
+    return total_earnings
     return total_earnings
 
 total_earnings = calculate_potential_earnings()
