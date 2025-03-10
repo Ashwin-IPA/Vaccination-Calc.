@@ -45,7 +45,10 @@ coadmin_vaccine = st.selectbox("Select a secondary vaccine (optional):", ["None"
 
 # Campaign cost
 include_campaign_cost = st.checkbox("📢 Include program cost")
-campaign_cost = st.number_input("Program Cost ($)", min_value=0.0, value=0.0 if not include_campaign_cost else 100.0)
+if include_campaign_cost:
+    campaign_cost = st.number_input("Program Cost ($)", min_value=0.0, value=100.0)
+else:
+    campaign_cost = 0.0
 
 # Set targets
 target_vaccinations = st.number_input("🎯 Target Number of Vaccinations", min_value=0, value=100)
@@ -61,8 +64,11 @@ def calculate_potential_earnings():
     total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
     return total_earnings
 
-total_earnings = calculate_potential_earnings()
-st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+total_earnings = None
+recipient_email = st.text_input("📧 Enter recipient email:")
+if total_earnings is not None and st.button("📩 Send Email"):
+    total_earnings = calculate_potential_earnings()
+    st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
 # Mailto link generation
 recipient_email = st.text_input("📧 Enter recipient email:")
@@ -75,7 +81,7 @@ Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
 Target Vaccinations: {target_vaccinations}
 Program Cost: ${campaign_cost:,.2f}
-Basket Size: ${basket_size:,.2f if include_basket_size else 'N/A'}
+Basket Size: N/A" if not include_basket_size else f"Basket Size: ${basket_size:,.2f}"
 
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
