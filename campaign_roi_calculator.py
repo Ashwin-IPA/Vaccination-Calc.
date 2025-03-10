@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import urllib.parse
 
-# Title with Emoji
+# Title
 st.title("💉 Vaccination Potential Earnings Calculator")
 
 # Default vaccine pricing
@@ -29,26 +29,22 @@ vaccine_prices = {
     "Rabies": 19.32
 }
 
-# User input: Editable vaccine pricing
+# Sidebar for vaccine pricing customisation
 st.sidebar.header("🎯 Customize Vaccine Pricing")
 custom_prices = {}
 for vaccine, price in vaccine_prices.items():
     custom_prices[vaccine] = st.sidebar.number_input(f"{vaccine} Price ($)", value=price, min_value=0.0)
 
-# Main vaccine selection
+# Vaccine selection
 st.header("1️⃣ Choose Your Main Vaccine")
 main_vaccine = st.selectbox("Select a main vaccine:", list(vaccine_prices.keys()))
 
-# Optional co-administration vaccine
 st.header("2️⃣ Optional Co-administration Vaccine")
 coadmin_vaccine = st.selectbox("Select a secondary vaccine (optional):", ["None"] + list(vaccine_prices.keys()))
 
-# Campaign cost
-include_campaign_cost = st.checkbox("📢 Include program cost")
-if include_campaign_cost:
-    campaign_cost = st.number_input("Program Cost ($)", min_value=0.0, value=100.0)
-else:
-    campaign_cost = 0.0
+# Program cost toggle
+include_program_cost = st.checkbox("📢 Include program cost")
+program_cost = st.number_input("Program Cost ($)", min_value=0.0, value=100.0) if include_program_cost else 0.0
 
 # Set targets
 target_vaccinations = st.number_input("🎯 Target Number of Vaccinations", min_value=0, value=100)
@@ -57,39 +53,30 @@ target_vaccinations = st.number_input("🎯 Target Number of Vaccinations", min_
 include_basket_size = st.checkbox("🛒 Include basket size")
 basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, value=10.0) if include_basket_size else 0.0
 
-# Calculation of potential earnings
-def calculate_potential_earnings():
+# Generate report button
+if st.button("🚀 Generate Report"):
     main_vaccine_price = custom_prices.get(main_vaccine, 0)
     coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
-    total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + campaign_cost + (basket_size * target_vaccinations)
-    return total_earnings
-
-total_earnings = None
-recipient_email = None
-if total_earnings is not None:
+    total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
+    
+    st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+    
     recipient_email = st.text_input("📧 Enter recipient email:")
     if st.button("📩 Send Email"):
-    total_earnings = calculate_potential_earnings()
-    st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
-
-# Mailto link generation
-
-if st.button("🚀 Generate Report"):
-    subject = "Vaccination Earnings Report"
-    body = f"""
+        subject = "Vaccination Earnings Report"
+        body = f"""
 Vaccination Earnings Report:
 
 Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
 Target Vaccinations: {target_vaccinations}
-Program Cost: ${campaign_cost:,.2f}
-Basket Size: N/A" if not include_basket_size else f"Basket Size: ${basket_size:,.2f}"
+Program Cost: ${program_cost:,.2f}
+Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
-    mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-    st.markdown(f"[📨 Click here to send email]({mailto_link})")
+        mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
+        st.markdown(f"[📨 Click here to send email]({mailto_link})")
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
-
