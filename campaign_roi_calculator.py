@@ -47,7 +47,7 @@ include_program_cost = st.checkbox("📢 Include program cost")
 program_cost = st.number_input("Program Cost ($)", min_value=0.0, value=100.0) if include_program_cost else 0.0
 
 # Set targets
-target_vaccinations = st.number_input("🎯 Target Number of Vaccinations", min_value=0, value=100)
+target_patients = st.number_input("🎯 Target Number of Patients", min_value=0, value=100)
 
 # Basket size (optional)
 include_basket_size = st.checkbox("🛒 Include basket size")
@@ -56,7 +56,7 @@ basket_size = st.number_input("Basket Size ($ per patient)", min_value=0.0, valu
 # Calculate earnings
 main_vaccine_price = custom_prices.get(main_vaccine, 0)
 coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
-total_earnings = (main_vaccine_price + coadmin_vaccine_price) * target_vaccinations + program_cost + (basket_size * target_vaccinations)
+total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients + (basket_size * target_patients)) - program_cost
 
 st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
@@ -69,7 +69,7 @@ Vaccination Earnings Report:
 
 Main Vaccine: {main_vaccine}
 Secondary Vaccine: {coadmin_vaccine if coadmin_vaccine != 'None' else 'N/A'}
-Target Vaccinations: {target_vaccinations}
+Target Patients: {target_patients}
 Program Cost: ${program_cost:,.2f}
 Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 
@@ -77,6 +77,7 @@ Estimated Potential Earnings: ${total_earnings:,.2f}
 """
     mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
     st.markdown(f"[📩 Send Email]({mailto_link})")
+st.markdown(f"[📬 Click here if email doesn't populate automatically]({mailto_link})")
     st.success("✅ Email Populated Successfully!")
 
 # Financial disclaimer
