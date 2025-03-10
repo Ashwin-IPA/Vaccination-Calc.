@@ -76,8 +76,8 @@ Basket Size: {'N/A' if not include_basket_size else f'${basket_size:,.2f}'}
 Estimated Potential Earnings: ${total_earnings:,.2f}
 """
     mailto_link = f"mailto:{recipient_email}?subject={urllib.parse.quote(subject)}&body={urllib.parse.quote(body)}"
-    st.markdown(f"[📨 Click here to send email]({mailto_link})")
-    st.success("✅ Email Sent Successfully!")
+    st.markdown(f"[📩 Send Email]({mailto_link})")
+    st.success("✅ Email Populated Successfully!")
 
 # Financial disclaimer
 st.markdown("""⚠️ **Financial Disclaimer:** This is an estimation tool and does not guarantee actual earnings. Prices and costs should be verified before implementation.""")
