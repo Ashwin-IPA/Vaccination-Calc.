@@ -3,9 +3,15 @@ import pandas as pd
 import urllib.parse
 from PIL import Image  # Import PIL to load the image
 
-# Load and display the IPA banner image
+# Load and resize the IPA banner image to 50%
 banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
-st.image(banner, use_container_width=True)
+banner = banner.resize((int(banner.width * 0.5), int(banner.height * 0.5)))
+
+# Center the image using HTML and display it
+st.markdown(
+    f"<div style='text-align: center;'><img src='2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp' width='{banner.width}'></div>",
+    unsafe_allow_html=True
+)
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
