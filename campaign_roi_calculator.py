@@ -1,17 +1,16 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
-from PIL import Image  # Import PIL to load the image
+from PIL import Image
 
-# Load and resize the IPA banner image to 50%
+# Load and resize the IPA banner image
 banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
 banner = banner.resize((int(banner.width * 0.5), int(banner.height * 0.5)))
 
-# Center the image using HTML and display it
-st.markdown(
-    f"<div style='text-align: center;'><img src='2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp' width='{banner.width}'></div>",
-    unsafe_allow_html=True
-)
+# Center the image using Streamlit layout
+st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
+st.image(banner)
+st.markdown("</div>", unsafe_allow_html=True)
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
