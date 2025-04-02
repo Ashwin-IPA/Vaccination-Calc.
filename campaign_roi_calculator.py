@@ -35,7 +35,7 @@ vaccine_prices = {
 }
 
 # Sidebar for vaccine pricing customization
-st.sidebar.header("🎯 Customise Vaccine Pricing")
+st.sidebar.header("Customise Vaccine Pricing")
 custom_prices = {}
 for vaccine, price in vaccine_prices.items():
     custom_prices[vaccine] = st.sidebar.number_input(f"{vaccine} Price ($)", value=price, min_value=0.0)
@@ -48,7 +48,7 @@ st.header("2️⃣ Optional Co-administration Vaccine")
 coadmin_vaccine = st.selectbox("Select a secondary vaccine (optional):", ["None"] + list(vaccine_prices.keys()))
 
 # Program cost toggle
-include_stock_cost = st.checkbox("📈 Include Total Stock Cost")
+include_stock_cost = st.checkbox("📦 Include Total Stock Cost")
 stock_cost = st.number_input("Total Stock Cost ($)", min_value=0.0, value=100.0) if include_stock_cost else 0.0
 
 # Set targets
