@@ -1,16 +1,14 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
-from PIL import Image
 
-# Load the IPA banner image
-banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
-
-# Resize logic (50% of original width)
-display_width = int(banner.width * 0.5)
-
-# Show image aligned with calculator layout
-st.image(banner, width=display_width)
+# Display the logo using HTML with fixed pixel width (e.g. 300px)
+st.markdown(
+    """
+    <img src='2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp' width='300' style='margin-bottom: 10px;' />
+    """,
+    unsafe_allow_html=True
+)
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
