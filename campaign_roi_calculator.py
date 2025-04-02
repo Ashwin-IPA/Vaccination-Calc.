@@ -5,21 +5,12 @@ from PIL import Image
 
 # Load and resize the IPA banner image to 50%
 banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
-banner = banner.resize((int(banner.width * 0.5), int(banner.height * 0.5)))
+resized_banner = banner.resize((int(banner.width * 0.5), int(banner.height * 0.5)))
 
-# Save resized image to a temp path to embed via HTML
-resized_path = "resized_banner.webp"
-banner.save(resized_path)
-
-# Display the image using HTML (to control width and centering)
-st.markdown(
-    f"""
-    <div style='text-align: center;'>
-        <img src='{resized_path}' width='{banner.width}' />
-    </div>
-    """,
-    unsafe_allow_html=True
-)
+# Center using Streamlit columns
+col1, col2, col3 = st.columns([1, 2, 1])
+with col2:
+    st.image(resized_banner)
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
