@@ -1,14 +1,13 @@
 import streamlit as st
 import pandas as pd
 import urllib.parse
+from PIL import Image
 
-# Display the logo using HTML with fixed pixel width (e.g. 300px)
-st.markdown(
-    """
-    <img src='2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp' width='300' style='margin-bottom: 10px;' />
-    """,
-    unsafe_allow_html=True
-)
+# Load the IPA banner image
+banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
+
+# Display it with a fixed width (e.g., 300 pixels)
+st.image(banner, width=300)
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
