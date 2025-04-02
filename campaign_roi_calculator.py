@@ -7,10 +7,7 @@ from PIL import Image
 banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
 resized_banner = banner.resize((int(banner.width * 0.5), int(banner.height * 0.5)))
 
-# Center using Streamlit columns
-col1, col2, col3 = st.columns([1, 2, 1])
-with col2:
-    st.image(resized_banner)
+
 
 # Title
 st.title("Vaccination Potential Earnings Calculator")
