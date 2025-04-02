@@ -8,7 +8,7 @@ banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
 st.image(banner, use_container_width=True)
 
 # Title
-st.title("💉 Vaccination Potential Earnings Calculator")
+st.title("Vaccination Potential Earnings Calculator")
 
 # Default vaccine pricing
 vaccine_prices = {
@@ -63,7 +63,7 @@ main_vaccine_price = custom_prices.get(main_vaccine, 0)
 coadmin_vaccine_price = custom_prices.get(coadmin_vaccine, 0) if coadmin_vaccine != "None" else 0
 total_earnings = ((main_vaccine_price + coadmin_vaccine_price) * target_patients) + (basket_size * target_patients) - stock_cost
 
-st.subheader(f"💰 Estimated Potential Earnings: **${total_earnings:,.2f}**")
+st.subheader(f"Estimated Potential Earnings: **${total_earnings:,.2f}**")
 
 # Break-even calculation
 if include_stock_cost and total_earnings > 0:
