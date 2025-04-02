@@ -5,7 +5,7 @@ from PIL import Image  # Import PIL to load the image
 
 # Load and display the IPA banner image
 banner = Image.open("2024_IPA_PrimaryLogo_FC_-FNL-e1733096007697.png.webp")
-st.image(banner, use_column_width=True)
+st.image(banner, use_container_width=True)
 
 # Title
 st.title("💉 Vaccination Potential Earnings Calculator")
