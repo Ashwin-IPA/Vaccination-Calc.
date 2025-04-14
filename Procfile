@@ -1,1 +1,1 @@
-web: streamlit run your_app.py --server.port $PORT --server.enableCORS false
+web: streamlit run vaxcal.py --server.port $PORT --server.enableCORS false
