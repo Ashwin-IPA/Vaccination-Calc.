@@ -15,7 +15,7 @@ st.title("Vaccination Potential Earnings Calculator")
 # Default vaccine pricing
 vaccine_prices = {
     "Influenza": 19.32,
-    "COVID-19": 27.35,
+    "COVID-19": 28.35,
     "COVID-19 (site visit)": 122.4,
     "Pneumococcal": 19.32,
     "Respiratory Syncytial Virus (RSV)": 19.32,
